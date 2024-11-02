@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+{% comment %} {% extends "base.html" %}
+
+{% block title %}
+Graphs
+{% endblock %}
+
+{% block content %}
+    <h2>Expense Analysis</h2>
+
+    <!-- Bar chart for category-wise expenses -->
+    <canvas id="barChart" width="400" height="200"></canvas>
+    <!-- Line chart for expenses over time -->
+    <canvas id="lineChart" width="400" height="200"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Sample data for bar chart
+        var barData = {
+            labels: ["Groceries", "Rent", "Utilities", "Entertainment", "Transport"],
+            datasets: [{
+                label: 'Category-wise Expenses',
+                data: [300, 1200, 150, 200, 100],  // Replace with dynamic data
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        // Sample data for line chart
+        var lineData = {
+            labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+            datasets: [{
+                label: 'Weekly Expenses',
+                data: [500, 700, 600, 800],  // Replace with dynamic data
+                fill: false,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                tension: 0.1
+            }]
+        };
+
+        // Render the bar chart
+        var ctxBar = document.getElementById('barChart').getContext('2d');
+        var barChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: barData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Render the line chart
+        var ctxLine = document.getElementById('lineChart').getContext('2d');
+        var lineChart = new Chart(ctxLine, {
+            type: 'line',
+            data: lineData,
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %} {% endcomment %}
+
+
+{% block title %}
+Graphs
+{% endblock %}
+
+{% block content %}
+    <h2 style="text-align: center;">Expense Analysis</h2>
+
+    <div style="display: flex; justify-content: center; flex-wrap: wrap;">
+        <!-- Bar chart for category-wise expenses -->
+        <div style="text-align: center; margin: 20px;">
+            <h3>Bar Graph</h3>
+            <canvas id="barChart" style="max-width: 500px; max-height: 300px;"></canvas>
+            <p>Bar graph for expenses based on category.</p>
+        </div>
+
+        <!-- Line chart for expenses over time -->
+        <div style="text-align: center; margin: 20px;">
+            <h3>Line Graph</h3>
+            <canvas id="lineChart" style="max-width: 500px; max-height: 300px;"></canvas>
+            <p>Line graph for expenses over time.</p>
+        </div>
+
+        <!-- Pie chart for overall category distribution -->
+        <div style="text-align: center; margin: 20px;">
+            <h3>Pie Chart</h3>
+            <canvas id="pieChart" style="max-width: 500px; max-height: 300px;"></canvas>
+            <p>Pie chart representing the percentage distribution of expenses.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+    <script>
+        // Sample data for bar chart
+        var barData = {
+            labels: ["Groceries", "Rent", "Utilities", "Entertainment", "Transport"],
+            datasets: [{
+                label: 'Category-wise Expenses',
+                data: [300, 1200, 150, 200, 100],  // Replace with dynamic data
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',  // Groceries
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        };
+
+        // Sample data for line chart
+        var lineData = {
+            labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+            datasets: [{
+                label: 'Weekly Expenses',
+                data: [500, 700, 600, 800],  // Replace with dynamic data
+                fill: false,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                tension: 0.1
+            }]
+        };
+
+        // Sample data for pie chart with unique colors
+        var pieData = {
+            labels: ["Groceries", "Rent", "Utilities", "Entertainment", "Transport"],
+            datasets: [{
+                data: [300, 1200, 150, 200, 100],  // Replace with dynamic data
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',  // Groceries
+                    'rgba(54, 162, 235, 0.6)',  // Rent
+                    'rgba(255, 206, 86, 0.6)',  // Utilities
+                    'rgba(75, 192, 192, 0.6)',  // Entertainment
+                    'rgba(153, 102, 255, 0.6)'  // Transport
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',    // Groceries
+                    'rgba(54, 162, 235, 1)',    // Rent
+                    'rgba(255, 206, 86, 1)',     // Utilities
+                    'rgba(75, 192, 192, 1)',     // Entertainment
+                    'rgba(153, 102, 255, 1)'     // Transport
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Render the bar chart
+        var ctxBar = document.getElementById('barChart').getContext('2d');
+        var barChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: barData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Render the line chart
+        var ctxLine = document.getElementById('lineChart').getContext('2d');
+        var lineChart = new Chart(ctxLine, {
+            type: 'line',
+            data: lineData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Render the pie chart with percentage labels
+        var ctxPie = document.getElementById('pieChart').getContext('2d');
+        var pieChart = new Chart(ctxPie, {
+            type: 'pie',
+            data: pieData,
+            plugins: [ChartDataLabels],
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    datalabels: {
+                        formatter: (value, context) => {
+                            let total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                            let percentage = (value / total * 100).toFixed(2) + '%';
+                            return percentage;
+                        },
+                        color: '#fff',
+                        font: {
+                            weight: 'bold'
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => {
+                                let total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                let value = context.raw;
+                                let percentage = (value / total * 100).toFixed(2);
+                                return `${context.label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}
+
