@@ -1,83 +1,13 @@
 {% extends "base.html" %}
-{% comment %} {% extends "base.html" %}
-
 {% block title %}
 Graphs
 {% endblock %}
 
 {% block content %}
-    <h2>Expense Analysis</h2>
-
-    <!-- Bar chart for category-wise expenses -->
-    <canvas id="barChart" width="400" height="200"></canvas>
-    <!-- Line chart for expenses over time -->
-    <canvas id="lineChart" width="400" height="200"></canvas>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Sample data for bar chart
-        var barData = {
-            labels: ["Groceries", "Rent", "Utilities", "Entertainment", "Transport"],
-            datasets: [{
-                label: 'Category-wise Expenses',
-                data: [300, 1200, 150, 200, 100],  // Replace with dynamic data
-                backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-            }]
-        };
-
-        // Sample data for line chart
-        var lineData = {
-            labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
-            datasets: [{
-                label: 'Weekly Expenses',
-                data: [500, 700, 600, 800],  // Replace with dynamic data
-                fill: false,
-                borderColor: 'rgba(75, 192, 192, 1)',
-                tension: 0.1
-            }]
-        };
-
-        // Render the bar chart
-        var ctxBar = document.getElementById('barChart').getContext('2d');
-        var barChart = new Chart(ctxBar, {
-            type: 'bar',
-            data: barData,
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // Render the line chart
-        var ctxLine = document.getElementById('lineChart').getContext('2d');
-        var lineChart = new Chart(ctxLine, {
-            type: 'line',
-            data: lineData,
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
-{% endblock %} {% endcomment %}
-
-
-{% block title %}
-Graphs
-{% endblock %}
-
-{% block content %}
+    <br>
     <h2 style="text-align: center;">Expense Analysis</h2>
+
+    <br><hr>
 
     <div style="display: flex; justify-content: center; flex-wrap: wrap;">
         <!-- Bar chart for category-wise expenses -->
@@ -106,6 +36,10 @@ Graphs
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 
     <script>
+
+        var labels = {{ labels|safe }};
+        var data = {{ data|safe }};
+
         // Sample data for bar chart
         var barData = {
             labels: ["Groceries", "Rent", "Utilities", "Entertainment", "Transport"],
@@ -220,5 +154,13 @@ Graphs
             }
         });
     </script>
+
+    <center>
+        <div class="suggestion" style="margin-top: 30px; text-align: center;">
+            <h3>AI Suggestions</h3>
+            <p>{{ suggestion }}</p>
+        </div>
+    </center>
+
 {% endblock %}
 
