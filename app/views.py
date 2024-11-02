@@ -6,6 +6,8 @@ from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.http import JsonResponse
+from django.db.models import Sum
 
 def login_page(request):
 
@@ -77,6 +79,38 @@ def home(request):
         'goal_status': goal_status
     }
     return render(request, 'home.html', context)
+
+
+@login_required
+def graphs(request):
+    # expenses = Expense.objects.filter(user=request.user)
+    # expenses_by_category = expenses.values('category__name').annotate(total_amount=Sum('amount'))
+    
+    # # Prepare data for Chart.js
+    # labels = [expense['category__name'] for expense in expenses_by_category]
+    # data = [float(expense['total_amount']) for expense in expenses_by_category]
+    
+    # context = {
+    #     'labels': labels,
+    #     'data': data
+    # }
+    # return render(request, 'graphs.html', context)
+    expenses = Expense.objects.filter(user=request.user)
+    if not expenses:
+        print("No expenses found for the user.")
+    else:
+        print("Expenses found:", expenses)
+
+    categories = expenses.values('category__name').annotate(total=Sum('amount')).order_by('category__name')
+    
+    labels = [item['category__name'] for item in categories]
+    data = [float(item['total']) for item in categories]
+
+    context = {
+        'labels': labels,
+        'data': data,
+    }
+    return render(request, 'graphs.html', context)
 
 
 def logout_page(request):
