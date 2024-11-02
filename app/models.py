@@ -17,7 +17,7 @@ class Expense(models.Model):
     date = models.DateField(default=timezone.now)
     
     def __str__(self):
-        return f"{self.category} - {self.amount}"
+        return f"{self.category}: {self.amount}"
 
 class WeeklyGoal(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

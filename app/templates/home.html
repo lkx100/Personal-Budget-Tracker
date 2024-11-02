@@ -3,15 +3,40 @@
 Home
 {% endblock %}
 {% block content %}
+
+<style>
+    .positive-amount {
+        color: green;
+    }
+    .negative-amount {
+        color: red;
+    }
+</style>
+
     <h2>Expenses</h2>
     <p>Weekly Goal Status: {{ goal_status }}</p>
-    <p>Total Expenses: {{ total_expenses }}</p>
+    <p>Total Expenses: ${{ total_expenses }}</p>
 
-    <ul>
-    {% for expense in expenses %}
-        <li>{{ expense.date }} - {{ expense.category.name }}: ${{ expense.amount }}</li>
-    {% endfor %}
-    </ul>
+    <table class="respo">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for expense in expenses %}
+            <tr>
+                <td>{{ expense.date }}</td>
+                <td>{{ expense.category.name }}</td>
+                <td class="{% if expense.amount < 0 %}negative-amount{% else %}positive-amount{% endif %}">
+                    ₹{{ expense.amount }}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
     <a href="{% url 'add_expense' %}">Add Expense</a>
     <a href="{% url 'set_weekly_goal' %}">Set Weekly Goal</a>
