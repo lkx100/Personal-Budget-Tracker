@@ -1,0 +1,12 @@
+<!-- app/templates/app/set_weekly_goal.html -->
+{% extends "base.html" %}
+{% block content %}
+    <h2>Set Weekly Goal</h2>
+    <form method="post">
+        {% csrf_token %}
+        <label for="goal_amount">Goal Amount:</label>
+        <input type="number" name="goal_amount" step="0.01" required>
+
+        <button type="submit">Set Goal</button>
+    </form>
+{% endblock %}
