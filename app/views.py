@@ -6,10 +6,8 @@ from django.utils import timezone
 from datetime import timedelta
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.http import JsonResponse
 from django.db.models import Sum
-from .ai_utils import generate_ai_suggestion
-import google.generativeai as genai
-import os
 
 def login_page(request):
 
@@ -62,19 +60,18 @@ def signup_page(request):
 @login_required
 def home(request):
     expenses = Expense.objects.filter(user=request.user)
-    today = timezone.now().date()
     current_week_start = timezone.now().date() - timedelta(days=timezone.now().weekday())
     current_goal = WeeklyGoal.objects.filter(
-        user=request.user, 
-        start_date__lte=today,
-        end_date__gte=today
+        user=request.user,
+        start_date__lte=current_week_start,
+        end_date__gte=current_week_start
     ).first()
-    print("Current Goal:", current_goal)
+    
     total_expenses = sum(exp.amount for exp in expenses)
     goal_status = None
     if current_goal:
         goal_status = "Within Goal" if total_expenses <= current_goal.goal_amount else "Exceeding Goal"
-    print("Total Expenses:", total_expenses)
+    
     context = {
         'expenses': expenses,
         'current_goal': current_goal,
@@ -86,39 +83,32 @@ def home(request):
 
 @login_required
 def graphs(request):
-    expenses = Expense.objects.filter(user=request.user)
-
-    categories = expenses.values('category__name').annotate(total=Sum('amount')).order_by('category__name')
-    labels = [item['category__name'] for item in categories]
-    data = [float(item['total']) for item in categories]
-
-    # Prepare data for AI suggestion
-    expense_data = expenses.values('date', 'category__name', 'amount')
-    expense_list = list(expense_data)
-
-    expenses_formatted = ""
-    for expense in expense_list:
-        expenses_formatted += f"Date: {expense['date']}, Category: {expense['category__name']}, Amount: {expense['amount']}\n"
+    # expenses = Expense.objects.filter(user=request.user)
+    # expenses_by_category = expenses.values('category__name').annotate(total_amount=Sum('amount'))
     
-    prompt = f"Given the following expense data:\n{expenses_formatted}\nProvide personalized spending advice in Brief."
-
-    genai.configure(api_key=os.environ["API_KEY"])
-
-    # Generate AI suggestion
-    # suggestion = generate_ai_suggestion(expense_list)
-    model = genai.GenerativeModel("gemini-1.5-flash")
-    response = model.generate_content(prompt)
-    suggestion = response.text
-
+    # # Prepare data for Chart.js
+    # labels = [expense['category__name'] for expense in expenses_by_category]
+    # data = [float(expense['total_amount']) for expense in expenses_by_category]
+    
+    # context = {
+    #     'labels': labels,
+    #     'data': data
+    # }
+    # return render(request, 'graphs.html', context)
+    expenses = Expense.objects.filter(user=request.user)
     if not expenses:
         print("No expenses found for the user.")
     else:
         print("Expenses found:", expenses)
 
+    categories = expenses.values('category__name').annotate(total=Sum('amount')).order_by('category__name')
+    
+    labels = [item['category__name'] for item in categories]
+    data = [float(item['total']) for item in categories]
+
     context = {
         'labels': labels,
         'data': data,
-        'suggestion': suggestion,
     }
     return render(request, 'graphs.html', context)
 
