@@ -7,9 +7,9 @@ from datetime import timedelta
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Sum
-from .ai_utils import generate_ai_suggestion
 import google.generativeai as genai
 import os
+from django.contrib import messages
 
 def login_page(request):
 
@@ -63,7 +63,6 @@ def signup_page(request):
 def home(request):
     expenses = Expense.objects.filter(user=request.user)
     today = timezone.now().date()
-    current_week_start = timezone.now().date() - timedelta(days=timezone.now().weekday())
     current_goal = WeeklyGoal.objects.filter(
         user=request.user, 
         start_date__lte=today,
@@ -75,11 +74,20 @@ def home(request):
     if current_goal:
         goal_status = "Within Goal" if total_expenses <= current_goal.goal_amount else "Exceeding Goal"
     print("Total Expenses:", total_expenses)
+    goal = WeeklyGoal.objects.all().first()
+    print("GOAL AMOUNT", goal.goal_amount)
+    difference = goal.goal_amount - total_expenses
+
+    if difference > 0:
+        messages.warning(request, f"Under Limit | You can still spend ₹{difference}")
+    else:
+        messages.info(request, f"You have Exceeded ₹{difference} overall | Please Limit your Expences")
+
     context = {
         'expenses': expenses,
         'current_goal': current_goal,
         'total_expenses': total_expenses,
-        'goal_status': goal_status
+        'goal_status': goal_status,
     }
     return render(request, 'home.html', context)
 

@@ -20,9 +20,16 @@ Home
         <p>Total Expenses: ₹{{ total_expenses }}</p>
     </div>
 
+    {% if messages %}
+    <div class="alert alert-primary" role="alert">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div> 
+    {% endif %}
     <a href="{% url 'add_expense' %}"><button class="btn btn-primary">Add Expense</button></a>
     <a href="{% url 'set_weekly_goal' %}"><button class="btn btn-secondary">Set Weekly Goal</button></a>
-
+    <br><hr>
     <table class="respo">
         <thead>
             <tr>
